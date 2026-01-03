@@ -211,11 +211,46 @@ timeline.push(...createTrials("mixed", N_TRIALS_MIXED));
 
 timeline.push({
   type: "html-keyboard-response",
-  stimulus: `<h2>Paldies par dalību!</h2>`,
+  stimulus: function () {
+
+    const trials = jsPsych.data.get()
+      .filterCustom(d =>
+        d.trial_type === "html-keyboard-response" &&
+        !d.ignore &&
+        d.block
+      );
+
+    function blockAccuracy(blockName) {
+      const blockTrials = trials.filter({ block: blockName });
+      if (blockTrials.count() === 0) return "—";
+      return Math.round(blockTrials.select("correct").mean() * 100) + "%";
+    }
+
+    const globalAcc = blockAccuracy("global");
+    const localAcc  = blockAccuracy("local");
+    const mixedAcc  = blockAccuracy("mixed");
+
+    const meanRT = Math.round(
+      trials.filter({ correct: 1 }).select("rt").mean()
+    );
+
+    return `
+      <h2>Paldies par dalību!</h2>
+
+      <h3>Precizitāte pa blokiem</h3>
+      <p><strong>Globālais bloks:</strong> ${globalAcc}</p>
+      <p><strong>Lokālais bloks:</strong> ${localAcc}</p>
+      <p><strong>Mixed bloks:</strong> ${mixedAcc}</p>
+
+      <p style="margin-top:15px;">
+        <strong>Vidējais reakcijas laiks:</strong> ${meanRT} ms
+      </p>
+    `;
+  },
   choices: jsPsych.NO_KEYS,
-  trial_duration: 1000,
-  data: {ignore:true}
+  data: { ignore: true }
 });
+
 
 jsPsych.init({
   timeline: timeline,
