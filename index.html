@@ -39,14 +39,12 @@
 
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxKmxDuXWamriFw6CASnmotFzVeJzrOkoUDlb7UJ7ZZMwr2KPqSi9vPOEaEarW4uuAuvA/exec";
 
-// Generate participant ID and timestamp
 function generateParticipantID() {
   return "NAVON-" + Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 const PARTICIPANT_ID = generateParticipantID();
 const TIMESTAMP = new Date().toISOString();
 
-// Add participant info to all trials
 jsPsych.data.addProperties({
   participant_id: PARTICIPANT_ID,
   timestamp: TIMESTAMP
@@ -83,7 +81,6 @@ const TEMPLATES = {
   ]
 };
 
-// Generate Navon grid with random colors and fade-in animation
 function generateNavonHTML(global_letter, local_letter){
   let html = '<div style="display:inline-block;">';
   const template = TEMPLATES[global_letter];
